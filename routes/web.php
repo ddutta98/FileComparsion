@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\FilesController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Artisan;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,6 +23,10 @@ Route::get('/v1_only', 'FilesController@return_v1_only');
 Route::get('/v2_only', 'FilesController@return_v2_only'); 
 Route::get('/common_and_different', 'FilesController@return_common_and_different'); 
 Route::get('/common_and_same', 'FilesController@return_common_and_same'); 
-
+Route::get('/artisan/storage', function() {
+    $command = 'storage:link';
+    $result = Artisan::call($command);
+    return Artisan::output();
+});
 
 // Route::get('/files', 'FilesController@returnFiLes');
