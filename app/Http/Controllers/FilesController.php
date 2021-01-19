@@ -75,7 +75,7 @@ class FilesController extends Controller
                 $com_dif_count++;
             }
         }
-        // dd($common_and_different);
+        dd($common_and_different);
         return array('v1_only' => $v1_only, 'v2_only' => $v2_only, 'common_and_same' => $common_and_same, 'common_and_different' => $common_and_different);
     }
 
