@@ -54,19 +54,6 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
-        'v1' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/task-websites/v1'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
-        ],
-        'v2' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/task-websites/v2'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
-        ],
-
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -34,15 +34,21 @@ class FilesController extends Controller
     public function returnFiles()
     {
         $fileNames_v1 = [];
-        $path_v1 = Storage::disk('v1')->allFiles();
-        $path_v2 = Storage::disk('v2')->allFiles();
+        $path_v1 = Storage::disk('public')->allFiles('task-websites/v1');
+        $path_v2 = Storage::disk('public')->allFiles('task-websites/v2');
 
         foreach ($path_v1 as $file) {
-            array_push($fileNames_v1, pathinfo($file)['dirname'] . "/" . pathinfo($file)['basename']);
+            $path=substr(pathinfo($file)['dirname'],  17) . "/" . pathinfo($file)['basename'];
+            if($path[0]=='/')
+                $path = substr($path, 1);
+            array_push($fileNames_v1, $path);
         }
         $fileNames_v2 = [];
         foreach ($path_v2 as $file) {
-            array_push($fileNames_v2, pathinfo($file)['dirname'] . "/" . pathinfo($file)['basename']);
+            $path=substr(pathinfo($file)['dirname'],  17) . "/" . pathinfo($file)['basename'];
+            if($path[0]=='/')
+                $path = substr($path, 1);
+            array_push($fileNames_v2, $path);
         }
         $v1_only = array_diff($fileNames_v1, $fileNames_v2);
         $v2_only = array_diff($fileNames_v2, $fileNames_v1);
@@ -54,20 +60,22 @@ class FilesController extends Controller
         $com_dif_count = 0;
 
         foreach ($both as $file) {
-
-            if (sha1_file((Storage::disk('v1')->path($file))) == sha1_file((Storage::disk('v2')->path($file)))) {
-                array_push($common_and_same, pathinfo($file)['dirname'] . "/" . pathinfo($file)['basename']);
+            $path=pathinfo($file)['dirname'] . "/" . pathinfo($file)['basename'];
+            if($path[0]=='.')
+                $path = substr($path, 2);
+            if (sha1_file((Storage::disk('public')->path('task-websites/v1/'.$file))) == sha1_file((Storage::disk('public')->path('task-websites/v2/'.$file)))) {
+                array_push($common_and_same,$path );
             } else {
                 array_push($common_and_different, array(
-                    'path' => pathinfo($file)['dirname'] . "/" . pathinfo($file)['basename'],
+                    'path' => $path,
 
-                    'html' => $this->comparisonView(Storage::disk('v1')->path($file), Storage::disk('v2')->path($file)),
+                    'html' => $this->comparisonView(Storage::disk('public')->path('task-websites/v1/'.$file), (Storage::disk('public')->path('task-websites/v2/'.$file))),
                     'id' => $com_dif_count
                 ));
                 $com_dif_count++;
             }
         }
-
+        // dd($common_and_different);
         return array('v1_only' => $v1_only, 'v2_only' => $v2_only, 'common_and_same' => $common_and_same, 'common_and_different' => $common_and_different);
     }
 
